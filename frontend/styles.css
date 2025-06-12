@@ -1,0 +1,382 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #d4b89f;
+}
+
+header {
+    position: relative;
+    min-height: 350px;
+    background:
+            url('../frontend/Images/duotone.png') center/cover;
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+nav {
+    display: flex;
+    gap: 20px;
+    z-index: 1;
+}
+
+.logo {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    margin: 0;
+    font-size: 2.5em;
+    z-index: 2;
+}
+.profile-btn {
+    position: fixed; /* Фиксированная позиция */
+    top: 20px;
+    right: 30px;
+    color: #2e4b35; /* Цвет текста как у шапки */
+    background: white; /* Белый фон */
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 30px; /* Закругленные углы */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Тень для объема */
+    z-index: 1000;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid #2e4b35; /* Граница в цвет шапки */
+    cursor: pointer;
+}
+
+.profile-btn:hover {
+    background: #f0f0f0; /* Эффект при наведении */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.center {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 15px;
+    border-radius: 10px;
+    width: auto;
+    min-width: 800px;
+}
+.search-bar {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2e4b35;
+    padding: 5px 15px;
+    border-radius: 10px;
+    width: auto;
+    min-width: 800px;
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-bar input,
+.search-bar button {
+    padding: 5px 8px; /* Единый padding */
+    border-radius: 5px;
+    border: none;
+    height: 40px; /* Увеличим высоту для лучшей пропорции */
+    box-sizing: border-box; /* Важно! */
+    font-size: 14px;
+    line-height: 1;
+    flex: 1; /* Равномерное распределение */
+    min-width: 0; /* Для корректной работы flex */
+}
+
+
+.search-bar button {
+    background: #a05c2a;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px; /* Минимальная ширина */
+    flex-grow: 0; /* Не растягивается как поля */
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.people-input {
+    flex: 0 0 60px !important; /* Фиксированная ширина */
+    padding: 0 5px !important;
+    text-align: center;
+}
+
+.search-bar input[type="date"] {
+    flex: 0 0 140px; /* Фиксированная ширина для дат */
+    color: #6f6f6f;
+
+}
+.search-bar button:hover {
+    background: #8d5123; /* Темнее при наведении */
+    transform: translateY(-1px); /* Легкий подъем */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* Тень */
+}
+
+.search-bar button:active {
+    transform: translateY(1px); /* Эффект нажатия */
+}
+
+@media (max-width: 850px) {
+    .search-bar {
+        min-width: 90%;
+        width: 90%;
+    }
+
+    .search-container {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .search-bar input,
+    .search-bar button {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .people-input {
+        width: 80px !important;
+        max-width: 80px;
+    }
+}
+
+
+/* Контейнер для поиска и сортировки */
+.search-sort-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 1000px;
+    display: flex;
+    align-items: flex-start; /* Выравнивание по верхнему краю */
+    gap: 20px;
+}
+
+.sort-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0;
+    position: relative;
+    left: -5px; /* Сдвиг влево для выравнивания */
+}
+
+.sort-label {
+    color: white;
+    font-size: 14px;
+    white-space: nowrap;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.sort-select {
+    background: rgba(255, 255, 255, 0);
+    border: 2px solid rgba(255, 255, 255, 0.37);
+    border-radius: 5px;
+    color: white;
+    padding: 6px 30px 6px 12px;
+    min-width: 130px;
+    backdrop-filter: blur(5px);
+}
+
+.sort-select option {
+    background: #2e4b35;
+}
+
+/* Для мобильной версии */
+@media (max-width: 850px) {
+    .search-sort-container {
+        flex-direction: column;
+        gap: 15px;
+        width: 90%;
+    }
+
+    .sort-container {
+        width: 100%;
+        left: 0;
+        justify-content: flex-start;
+    }
+}
+
+
+
+
+
+
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+
+
+
+#accountBtn {
+    pointer-events: auto; /* Убедитесь, что кнопка доступна для кликов */
+}
+
+/* Кнопка "Сбросить все фильтры" */
+.reset-btn {
+    background-color: #637d6c;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.reset-btn:hover {
+    background: #3a5b45;
+    transform: translateY(-1px); /* Легкий подъем */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* Тень */
+}
+
+/* Кнопка "Применить" */
+.apply-button {
+    background: #a05c2a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 12px;
+    margin: 10px -0px;
+    margin-top: 50px;
+}
+.apply-button:hover {
+    background: #8d5123;
+    transform: translateY(-1px); /* Легкий подъем */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* Тень */
+}
+
+.container {
+    display: flex;
+    padding: 20px;
+}
+
+.filters {
+    width: 250px;
+    background: #ffffff;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    border: none;
+    border-radius: 20px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    color:#3a5b45;
+}
+
+.filter-group label {
+    margin-bottom: 5px;
+}
+
+.price-range, .days-range {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #3a5b45;
+}
+
+.filters h3 {
+    color: #2e4b35;
+    font-size: 1.3em;
+    font-weight: 700;
+    margin: 0; /* Убираем дефолтный отступ заголовка */
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+.filters h4 {
+    color: #2e4b35;
+    font-size: 1.15em;
+    font-weight: 600;
+    margin: 0; /* Убираем дефолтный отступ заголовка */
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+/* Стили для ползунка цены */
+input[type="range"] {
+    width: 100%;
+    height: 4px;
+    background: #d1d1d1;
+    border-radius: 2px;
+    outline: none;
+    color: #3a5b45;
+    margin: 10px 0 35px; /* Увеличиваем отступы сверху и снизу */
+
+}
+
+/* Для Webkit браузеров (Chrome, Safari) */
+input[type="range"]::-webkit-slider-runnable-track {
+    background: #3a5b45;
+    height: 4px;
+    border-radius: 2px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #3a5b45;
+    border-radius: 50%;
+    margin-top: -6px;
+}
+
+/* Для Firefox */
+input[type="range"]::-moz-range-track {
+    background: #3a5b45;
+    height: 4px;
+    border-radius: 2px;
+}
+
+/* Стили для выпадающих списков */
+select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #3a5b45;
+    border-radius: 6px;
+    background-color: white;
+    color: #2e4b35;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    flex-grow: 1;
+    padding-left: 20px;
+}

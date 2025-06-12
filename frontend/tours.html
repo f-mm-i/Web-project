@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Tours</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="tours.html" class="nav-link">Туры</a>
+        <a href="articles.html" class="nav-link">Статьи</a>
+        <a href="about.html" class="nav-link">О нас</a>
+    </nav>
+    <h1 class="logo">Real Tours</h1>
+    <a id="accountBtn" class="profile-btn">Личный кабинет</a>
+    <div class="search-sort-container">
+        <section class="search-bar">
+            <div class="search-container">
+                <input type="text" placeholder="Откуда">
+                <input type="text" placeholder="Куда">
+                <input type="number" placeholder="Чел." min="1" class="people-input">
+                <input type="date" id="startDate">
+                <input type="date" id="endDate">
+                <button id="searchBtn">Найти</button>
+            </div>
+        </section>
+        <div class="sort-container">
+            <span class="sort-label">Сортировка по:</span>
+            <select class="sort-select">
+                <option value="Умолчанию">Умолчанию</option>
+                <option>Популярности</option>
+                <option>Рейтингу</option>
+                <option>Цене (возр.)</option>
+                <option>Цене (убыв.)</option>
+            </select>
+        </div>
+    </div>
+
+</header>
+
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Авторизация</h2>
+        <input type="text" class="login" placeholder="Логин*" id="login">
+        <span class="error-message"></span>
+        <input type="password" class="password" placeholder="Пароль*" id="password">
+        <span class="error-message"></span>
+        <button id="loginButton">Войти</button>
+        <p id="switchToRegister" class="switch-link">Еще нет аккаунта?</p>
+    </div>
+</div>
+
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Регистрация</h2>
+        <div class="auth-form">
+            <input type="text" class="fio" placeholder="Фамилия*">
+            <span class="error-message"></span>
+
+            <input type="text" class="fio" placeholder="Имя*">
+            <span class="error-message"></span>
+
+            <input type="text" class="fio" placeholder="Отчество*">
+            <span class="error-message"></span>
+
+            <input type="email" class="email" placeholder="Почта*">
+            <span class="error-message"></span>
+
+            <input type="tel" class="phone" placeholder="Телефон*">
+            <span class="error-message"></span>
+
+            <input type="text" class="city" placeholder="Город*">
+            <span class="error-message"></span>
+
+            <input type="text" class="login" placeholder="Логин*" id="login_register">
+            <span class="error-message"></span>
+
+            <input type="password" class="password" placeholder="Пароль*" id="password_register">
+            <span class="error-message"></span>
+        </div>
+        <button id="registerButton">Зарегистрироваться</button>
+        <p id="switchToLogin" class="switch-link">Уже есть аккаунт?</p>
+    </div>
+</div>
+
+<div class="container">
+    <aside class="filters">
+        <h3>Фильтры</h3>
+        <div class="filter-group">
+            <label><input type="checkbox" name="category" value="Активный отдых"> Активный отдых</label>
+            <label><input type="checkbox" name="category" value="Гастрономический"> Гастрономический</label>
+            <label><input type="checkbox" name="category" value="Групповой"> Групповой</label>
+            <label><input type="checkbox" name="category" value="Индивидуальный"> Индивидуальный</label>
+            <label><input type="checkbox" name="category" value="На английском языке"> На английском языке</label>
+            <label><input type="checkbox" name="category" value="На китайском языке"> На китайском языке</label>
+            <label><input type="checkbox" name="category" value="Образовательный"> Образовательный</label>
+            <label><input type="checkbox" name="category" value="Семейный"> Семейный</label>
+            <label><input type="checkbox" name="category" value="С экскурсоводом"> С экскурсоводом</label>
+            <label><input type="checkbox" name="category" value="Тематический"> Тематический</label>
+            <label><input type="checkbox" name="category" value="Экстремальный"> Экстремальный</label>
+            <label><input type="checkbox" name="category" value="18+"> 18+</label>
+        </div>
+
+        <h4>Цена</h4>
+        <div class="price-range">
+            <span>0 ₽</span>
+            <span id="priceValue">50000 ₽</span>
+            <span>100000 ₽</span>
+        </div>
+        <input type="range" id="priceRange" min="0" max="100000" value="50000">
+
+        <h4>Количество дней</h4>
+        <div class="days-range">
+            <span>1</span>
+            <span id="daysValue">7 дней</span>
+            <span>14</span>
+        </div>
+        <input type="range" id="daysRange" min="1" max="14" value="7">
+
+        <h4>Тип тура</h4>
+        <select id="typeInput">
+            <option value="Любой">Любой</option>
+            <option value="Автомобильный">Автомобильный</option>
+            <option value="Велосипедный">Велосипедный</option>
+            <option value="Воздушный">Воздушный</option>
+            <option value="На лошадях">На лошадях</option>
+            <option value="На поезде">На поезде</option>
+            <option value="Пеший">Пеший</option>
+            <option value="Речной">Речной</option>
+        </select>
+
+        <h4>Сезон</h4>
+        <select id="seasonInput">
+            <option value="Любой">Любой</option>
+            <option value="Лето">Лето</option>
+            <option value="Осень">Осень</option>
+            <option value="Зима">Зима</option>
+            <option value="Весна">Весна</option>
+        </select>
+
+        <h4>Сложность</h4>
+        <select id="complexityInput">
+            <option value="Любая">Любая</option>
+            <option value="Легкий">Легкий</option>
+            <option value="Средний">Средний</option>
+            <option value="Сложный">Сложный</option>
+        </select>
+
+        <button id="applyFilters" class="apply-button">Применить</button>
+        <button id="resetFilters" class="reset-btn">Сбросить все фильтры</button>
+    </aside>
+
+    <main id="tours">
+        <!-- Туры загружаются сюда -->
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
