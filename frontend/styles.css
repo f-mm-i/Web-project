@@ -380,3 +380,120 @@ main {
     flex-grow: 1;
     padding-left: 20px;
 }
+
+/* Стили для страницы статьи */
+.article-page {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    margin-bottom: 15px; /* Уменьшаем отступ снизу заголовка */
+    padding-bottom: 0; /* Убираем нижний padding если был */
+}
+
+.article-page h1 {
+    color: #2e4b35;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center; /* Добавляем центрирование */
+    width: 100%; /* Занимает всю ширину контейнера */
+    
+}
+
+.article-page img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.article-content {
+    line-height: 1.8;
+    color: #444;
+}
+
+.article-content h2 {
+    color: #2e4b35;
+    margin: 30px 0 15px 0;
+}
+
+.article-meta {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .article-page img {
+        height: 250px;
+    }
+}
+.article-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 25px 0;
+}
+.first-image {
+    margin-top: 100px !important;
+}
+
+h1 {
+    color: #2e4b35;
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #2e4b35;
+    margin: 40px 0 20px;
+    font-size: 1.8em;
+}
+
+ul {
+    margin: 20px 0;
+    padding-left: 30px;
+}
+
+li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.conclusion {
+    margin-top: 40px;
+    padding: 25px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    border-left: 4px solid #2e4b35;
+}
+
+.attractions-list li,
+.activity-list li,
+.food-list li,
+.tips-list li {
+    margin-bottom: 15px;
+    padding-left: 10px;
+}
+
+strong {
+    color: #2e4b35;
+}
+
+.article-page h2 {
+    margin-top: 40px;
+}
+
+.filters {
+    width: 280px;
+    height:fit-content;
+    flex-shrink: 0;
+}
+
+#tours {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
