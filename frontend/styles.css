@@ -381,6 +381,54 @@ main {
     padding-left: 20px;
 }
 
+/* Секция "О компании" */
+.about-company {
+    background-image: url('../frontend/Images/duotone1.png');
+    color: #ffffff;
+    padding: 50px;
+    text-align:left;
+    border-radius: 20px;
+    margin: 10px auto;
+    max-width: 1000px;
+    max-height: 500px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-container {
+    margin-top: 50px;
+    text-align:left;
+    font-size: 16px;
+}
+
+.about-stats {
+    padding-top: 50px;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    text-align:center;
+}
+.about-company h3 {
+    text-align: left;
+    width: 100%;
+    font-size: 25px;
+}
+
+.stat-item h2 {
+    font-size: 36px;
+    margin: 5px 0;
+    color: #ffffff;
+}
+
+.why-us {
+    text-align: left;
+    max-width: 700px; /* Совпадает с шириной плашки "О компании" */
+    margin: 20px auto 20px 250px; /* Верхний и нижний отступ 20px, слева - 0 */
+    background-color: #d4b89f;
+    color: #2e4b35;
+    font-size: 20px;
+}
+
+
 /* Стили для страницы статьи */
 .article-page {
     max-width: 800px;
