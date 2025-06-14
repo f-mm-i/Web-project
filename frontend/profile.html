@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет | Real Tours</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="no-bg-header">
+        <nav>
+            <a href="tours.html" class="nav-link">Туры</a>
+            <a href="articles.html" class="nav-link">Статьи</a>
+            <a href="about.html" class="nav-link">О нас</a>
+        </nav>
+        <h1 class="logo">Real Tours</h1>
+        <button id="logoutBtn" class="profile-btn" onclick="logout()">Выйти</button>
+    </header>
+
+    <div class="profile-container">
+        <section class="profile-info">
+            <h2>Добро пожаловать, <span id="userName">Иван Иванов</span>!</h2>
+            <div class="user-details">
+                <p>Email: <span id="userEmail">ivan@example.com</span></p>
+                <p>Дата регистрации: <span id="regDate">01.01.2023</span></p>
+            </div>
+        </section>
+
+        <section class="booking-history">
+            <h3>История бронирований</h3>
+            <div class="bookings-list">
+                <!-- Сюда будет подгружаться динамический контент -->
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

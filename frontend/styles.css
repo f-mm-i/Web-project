@@ -638,7 +638,75 @@ main {
     background: #f0f0f0;
 }
 
+/* Стили для личного кабинета */
+.profile-container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+}
 
+.profile-info {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.user-details p {
+    font-size: 16px;
+    color: #666;
+    margin: 10px 0;
+}
+
+.booking-history {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.booking-item {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px 0;
+}
+
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.booking-status {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.booking-status.confirmed {
+    background: #2e4b35;
+    color: white;
+}
+
+.booking-details p {
+    margin: 5px 0;
+    color: #666;
+}
+
+#logoutBtn {
+    background: transparent;
+    color: #2e4b35;
+    border: 2px solid #2e4b35;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#logoutBtn:hover {
+    background: rgba(46, 75, 53, 0.1);
+}
 
 /* Отображение карточек */
 .tour-card {
@@ -957,3 +1025,165 @@ strong {
     font-weight: 700;
 }
 
+/* Стили для модального окна деталей тура */
+#tourDetailsModal .modal-content {
+    background-color: white;
+    padding: 30px 30px;
+    border-radius: 12px;
+    width: 900px !important; /* Шире чем формы авторизации */
+    max-width: 90%; /* Ограничиваем для маленьких экранов */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#tourDetailsModal h2 {
+    color: #2e4b35;
+    font-size: 24px;
+    margin: 0 0 15px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #2e4b35;
+}
+
+.tour-image-container {
+    width: 100%;
+    text-align: center;
+    
+}
+
+.tour-image-container img {
+    max-width: 80%;
+    border-radius: 8px;
+    max-height: 220px;
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.tour-details {
+    text-align: left; /* Выравниваем по левому краю */
+    width: 90%;
+}
+
+#tourDescription {
+
+    margin-bottom: 10px;
+}
+
+/* Центрируем блок с датами */
+.date-container {
+    text-align: center;
+    margin: 15px 0;
+}
+
+/* Стили для текста дат */
+.date-container strong {
+    margin: 0 10px;
+}
+
+.tour-details p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.tour-details strong {
+    color: #2e4b35;
+    min-width: 100px;
+    display: inline-block;
+}
+
+#bookTourBtn {
+    background: #a05c2a; /* Цвет как у кнопки регистрации */
+    color: white;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    align-self: center;
+    width: 80%;
+}
+
+#bookTourBtn:hover {
+    background: #ca8350;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(160, 92, 42, 0.3);
+}
+
+/* Адаптивность */
+@media (max-width: 650px) {
+    #tourDetailsModal .modal-content {
+        width: 90%;
+        padding: 20px;
+    }
+    
+    #bookTourBtn {
+        width: 100%;
+    }
+}
+
+
+/* Добавляем новые стили */
+.details-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 10px 0;
+    font-size: 13px;
+}
+
+.details-left, .details-right {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+
+.difficulty-level {
+    color: #2e4b35;
+    font-weight: bold;
+    margin-top: auto;
+}
+
+/* Модифицируем существующие стили */
+.tour-details {
+    width: 100%;
+    padding: 0;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 8px 0;
+}
+
+.info-label {
+    color: #666;
+    min-width: 120px;
+}
+
+.info-value {
+    color: #2e4b35;
+    text-align: right;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .details-columns {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .difficulty-level {
+        margin-top: 15px;
+    }
+}
