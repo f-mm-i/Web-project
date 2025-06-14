@@ -159,6 +159,62 @@
     </main>
 </div>
 
+<!-- Модальное окно деталей тура -->
+<div id="tourDetailsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="tourName">Название тура</h2>
+        <div class="tour-image-container">
+            <img id="tourImage" src="../Frontend/Images/2772147bc5694699a60e615c9a111fab.jpg" alt="Изображение тура">
+        </div>
+        <div class="tour-details">
+            <p><strong>Описание:</strong> <span id="tourDescription"></span></p>
+            <div class="details-columns">
+                <!-- Левая колонка -->
+                <div class="details-left">
+                    <div class="info-row">
+                        <span class="info-label">Откуда:</span>
+                        <span class="info-value" id="tourFrom">Москва</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Начало:</span>
+                        <span class="info-value" id="tourStartDate">01.01.2024</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Продолжительность (в днях):</span>
+                        <span class="info-value" id="tourDuration">7 дней</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Свободные места:</span>
+                        <span class="info-value" id="tourSeats">12</span>
+                    </div>
+                </div>
+                
+                <!-- Правая колонка -->
+                <div class="details-right">
+                    <div class="info-row">
+                        <span class="info-label">Куда:</span>
+                        <span class="info-value" id="tourTo">Кунгур</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Окончание:</span>
+                        <span class="info-value" id="tourEndDate">07.01.2024</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Тип тура:</span>
+                        <span class="info-value" id="tourType">Экскурсионный</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Сложность:</span>
+                        <span class="info-value difficulty-level" id="tourDifficulty">Средний</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="bookTourBtn" class="book-btn">Забронировать</button>
+    </div>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>
