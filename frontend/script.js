@@ -374,3 +374,275 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+function applySearch() {
+    const departure = document.querySelector('input[placeholder="Откуда"]').value.toLowerCase();
+    const destination = document.querySelector('input[placeholder="Куда"]').value.toLowerCase();
+    const people = parseInt(document.querySelector('.people-input').value) || 0;
+    const startDate = document.getElementById("startDate").value ? new Date(document.getElementById("startDate").value) : null;
+    const endDate = document.getElementById("endDate").value ? new Date(document.getElementById("endDate").value) : null;
+
+    searchResults = allTours.filter(tour => {
+        const tourStartDate = new Date(tour.tour_start_date);
+        const tourEndDate = new Date(tour.tour_end_date);
+
+        const dateInRange = (startDate ? tourStartDate <= startDate : true) &&
+                           (endDate ? tourEndDate >= endDate : true);
+
+        return tour.tour_departure_city.toLowerCase().includes(departure) &&
+               tour.tour_destination_city.toLowerCase().includes(destination) &&
+               tour.tour_number_seats >= people &&
+               dateInRange;
+    });
+
+    updateTours(searchResults);
+}
+
+function applyFilters() {
+    const maxPrice = parseInt(priceRange.value);
+    const maxDays = parseInt(daysRange.value);
+    const selectedCategories = Array.from(document.querySelectorAll('.filter-group input[type="checkbox"]:checked'))
+        .map(checkbox => checkbox.value);
+    const type = document.getElementById('typeInput').value;
+    const season = document.getElementById('seasonInput').value;
+    const complexity = document.getElementById('complexityInput').value;
+
+    // Если нет выбранных категорий, просто загружаем все туры по цене и дням
+    if (selectedCategories.length === 0 && type === 'Любой' && season === 'Любой' && complexity === 'Любая') {
+        fetch(`http://localhost:3000/api/tours?maxPrice=${maxPrice}&maxDays=${maxDays}`)
+            .then(response => response.json())
+            .then(tours => updateTours(tours))  // Передаем все туры
+            .catch(error => console.error('Ошибка:', error));
+        return;
+    }
+
+    // Отправляем все фильтры на сервер
+    fetch('http://localhost:3000/api/tours/filter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            maxPrice: maxPrice,
+            maxDays: maxDays,
+            categories: selectedCategories,
+            type: type,
+            season: season,
+            complexity: complexity
+        })
+    })
+    .then(response => response.json())
+    .then(tours => updateTours(tours))  // Передаем туры с фильтрами
+    .catch(error => console.error('Ошибка:', error));
+}
+
+
+function sortTours(criteria) {
+    if (!searchResults.length) return;
+
+    if (criteria === "Цене (возр.)") {
+        searchResults.sort((a, b) => a.tour_cost - b.tour_cost);
+    } else if (criteria === "Цене (убыв.)") {
+        searchResults.sort((a, b) => b.tour_cost - a.tour_cost);
+    }
+    updateTours(searchResults);
+}
+
+
+function updateTours(tours) {
+    console.log('Пришедшие данные в updateTours:', tours);
+
+    if (!Array.isArray(tours)) {
+        console.error("Ошибка: updateTours получил не массив!", tours);
+        return;
+    }
+
+    const container = document.getElementById('tours');
+    container.innerHTML = '';
+
+    tours.forEach(tour => {
+        if (!tour.tour_url || !tour.tour_name || !tour.tour_cost || !tour.tour_duration) {
+            console.warn("Некорректные данные тура:", tour);
+            return;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'tour-card';
+
+        // Проверяем, какой тип данных у категорий
+        console.log(`Категории для тура "${tour.tour_name}":`, tour.tour_filters);
+
+        let categoriesHTML = '';
+        if (Array.isArray(tour.tour_filters)) {
+            categoriesHTML = tour.tour_filters
+                .map(category => `<span class="tag">${category}</span>`)
+                .join('');
+        } else if (typeof tour.tour_filters === 'string') {
+            // Если категории приходят строкой (например, "Активный отдых, Гастрономический")
+            categoriesHTML = tour.tour_filters
+                .split(',')
+                .map(category => `<span class="tag">${category.trim()}</span>`)
+                .join('');
+        }
+
+        card.innerHTML = `
+            <div class="tour-image">
+                <img src="${tour.tour_url}" alt="${tour.tour_name}" onerror="this.src='fallback.jpg';">
+            </div>
+            <div class="button-container">
+                <button class="details-btn">Подробнее</button>
+            </div>
+            <div class="tour-content">
+                <h3>${tour.tour_name}</h3>
+                <div class="tour-meta">
+                    <span class="price">${tour.tour_cost.toLocaleString()} ₽</span>
+                    <span class="days">${tour.tour_duration} дней</span>
+                </div>
+                <div class="tour-features">
+                     ${categoriesHTML}
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+        // Добавляем обработчик для кнопки "Подробнее"
+        card.querySelector('.details-btn').addEventListener('click', () => {
+            showTourDetails(tour);
+        });
+    });
+
+    console.log("Обновление завершено, карточки добавлены.");
+}
+
+// Функция для отображения деталей тура
+function showTourDetails(tour) {
+    currentTour = tour;
+    const modal = document.getElementById('tourDetailsModal');
+    
+    // Основные поля
+    document.getElementById('tourName').textContent = tour.tour_name;
+    document.getElementById('tourDescription').textContent = tour.tour_description || 'Описание отсутствует';
+    document.getElementById('tourImage').src = tour.tour_url; // Добавляем изображение
+    
+    // Левая колонка
+    document.getElementById('tourFrom').textContent = tour.tour_departure_city;
+    document.getElementById('tourStartDate').textContent = new Date(tour.tour_start_date).toLocaleDateString('ru-RU');
+    document.getElementById('tourDuration').textContent = `${tour.tour_duration}`;
+    document.getElementById('tourSeats').textContent = tour.tour_number_seats;
+
+    // Правая колонка
+    document.getElementById('tourTo').textContent = tour.tour_destination_city;
+    document.getElementById('tourEndDate').textContent = new Date(tour.tour_end_date).toLocaleDateString('ru-RU');
+    document.getElementById('tourType').textContent = tour.type_name || 'Не указано'; // Добавьте поле в запрос
+    document.getElementById('tourDifficulty').textContent = tour.complexity_name || 'Не указано'; // Добавьте поле в запрос
+
+    // Стилизация сложности
+    const difficultyElement = document.getElementById('tourDifficulty');
+    difficultyElement.className = 'difficulty-level ' + (tour.complexity_name?.toLowerCase() || 'medium');
+    
+    modal.style.display = 'block';
+}
+
+// Проверка авторизации при загрузке страницы
+function checkAuthState() {
+    const token = localStorage.getItem('token');
+    const userData = JSON.parse(localStorage.getItem('user'));
+    const accountBtn = document.getElementById('accountBtn');
+
+    if (accountBtn) {
+        if (token && userData) {
+            accountBtn.textContent = userData.name || 'Кабинет';
+            accountBtn.href = "profile.html";
+            // Убираем обработчик открытия модального окна
+            accountBtn.onclick = null; 
+        } else {
+            accountBtn.textContent = 'Личный кабинет';
+            accountBtn.removeAttribute('href');
+            // Добавляем открытие модального окна
+            accountBtn.onclick = () => {
+                document.getElementById('authModal').style.display = 'flex';
+                return false;
+            };
+        }
+    }
+}
+
+function validateInput(input) {
+    const value = input.value;
+    const errorMessage = input.nextElementSibling; // Блок для вывода ошибки
+    const regex = /^[a-zA-Zа-яА-Я0-9.@_-]+$/;
+
+    if (!regex.test(value)) {
+        input.style.borderColor = "red";
+        if (!errorMessage || !errorMessage.classList.contains("error-message")) {
+            const error = document.createElement("div");
+            error.classList.add("error-message");
+            error.textContent = "Используйте только буквы и цифры!";
+            error.style.color = "red";
+            error.style.fontSize = "12px";
+            error.style.marginTop = "5px";
+            input.parentNode.insertBefore(error, input.nextSibling);
+        }
+    } else {
+        input.style.borderColor = "";
+        if (errorMessage && errorMessage.classList.contains("error-message")) {
+            errorMessage.remove();
+        }
+    }
+};
+
+function checkTokenExpiration() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        const decoded = jwt.decode(token);
+        if (decoded.exp * 1000 < Date.now()) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            if (!window.location.pathname.includes('tours.html')) {
+                window.location.href = 'tours.html';
+            }
+        }
+    }
+}
+
+// Проверяем каждые 5 минут
+setInterval(checkTokenExpiration, 300000);
+
+window.logout = function() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = 'tours.html';
+};
+
+
+const winston = require('winston');
+
+// Настройка логгера
+const logger = winston.createLogger({
+  level: 'debug',
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'server.log' })
+  ],
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  )
+});
+
+// Логирование запросов
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.url}`, {
+    ip: req.ip,
+    body: req.body
+  });
+  next();
+});
+
+// Логирование ошибок
+app.use((err, req, res, next) => {
+  logger.error('Server Error:', {
+    message: err.message,
+    stack: err.stack,
+    route: req.path
+  });
+  res.status(500).json({ error: 'Internal Server Error' });
+});
