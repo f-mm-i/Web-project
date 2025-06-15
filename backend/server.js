@@ -162,3 +162,116 @@ app.post('/api/tours/filter', async (req, res) => {
       res.status(500).json({ error: 'Ошибка сервера' });
   }
 });
+
+const bcrypt = require('bcrypt');
+
+// Авторизация пользователя
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { login, password } = req.body;
+
+        // Проверяем, есть ли такой логин в базе
+        const userQuery = await pool.query(
+            'SELECT * FROM client WHERE client_login = $1',
+            [login]
+        );
+
+        if (userQuery.rows.length === 0) {
+            return res.status(400).json({ error: "Пользователь не найден" });
+        }
+
+        const user = userQuery.rows[0];
+
+        // Проверяем пароль
+        if (password !== user.client_password) {
+            return res.status(400).json({ error: "Неверный пароль" });
+        }
+
+        // Генерируем JWT токен
+        const token = jwt.sign(
+            { userId: user.client_id }, 
+            SECRET_KEY, 
+            { expiresIn: '1h' }
+        );
+
+        res.json({ 
+            message: "Вход успешен", 
+            token,
+            user: { 
+                id: user.client_id,
+                name: user.client_name,
+                login: user.client_login 
+            }
+        });
+    } catch (error) {
+        console.error("Ошибка авторизации:", error);
+        res.status(500).json({ error: "Ошибка сервера" });
+    }
+});
+
+app.post('/api/auth/register', async (req, res) => {
+    try {        
+        const { surname, name, patronymic, email, phone, city, login, password } = req.body;
+
+        // Проверяем, есть ли уже такой логин
+        const existingUser = await pool.query(
+            'SELECT * FROM client WHERE client_login = $1',
+            [login]
+        );
+
+        if (existingUser.rows.length > 0) {
+            return res.status(400).json({ error: "Логин уже занят" });
+        }
+
+        // Добавляем нового клиента в БД
+        const newUser = await pool.query(
+            `INSERT INTO client (client_surname, client_name, client_patronymic, client_email, client_phone, client_city, client_login, client_password)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING client_id, client_surname, client_name, client_email, client_login;`,
+            [surname, name, patronymic, email, phone, city, login, password]
+        );
+
+        // Генерируем токен для нового пользователя
+        const token = jwt.sign(
+            { userId: newUser.rows[0].client_id }, // Берем ID из результата запроса
+            SECRET_KEY,
+            { expiresIn: '24h' }
+        );
+
+        const userData = newUser.rows[0];
+        res.status(201).json({ 
+            message: "Регистрация успешна", 
+            token,
+            user: {
+                id: userData.client_id,
+                name: userData.client_name,
+                surname: userData.client_surname,
+                email: userData.client_email,
+                login: userData.client_login
+            }
+        });
+    } catch (error) {
+        console.error("Ошибка регистрации:", error);
+        res.status(500).json({ error: "Ошибка сервера" });
+    }
+});
+
+// checkAuth middleware
+const checkAuth = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({ error: 'Требуется авторизация' });
+    }
+    
+    const token = authHeader.split(' ')[1];
+    
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+        if (err) {
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).json({ error: 'Сессия истекла' });
+            }
+            return res.status(401).json({ error: 'Неверный токен' });
+        }
+        req.userId = decoded.userId;
+        next();
+    });
+};
