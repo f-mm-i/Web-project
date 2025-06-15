@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель | Real Tours</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="no-bg-header">
+        <nav>
+            <a href="admin.html" class="nav-link active">Добавить тур</a>
+            <a href="admin-bookings.html" class="nav-link">Бронирования</a>
+            <a href="admin-users.html" class="nav-link">Пользователи</a>
+        </nav>
+        <h1 class="logo">Admin</h1>
+        <button id="logoutBtn" class="profile-btn">Выйти</button>
+    </header>
+
+    <div class="admin-container">
+        <h2>Добавить новый тур</h2>
+        <form id="addTourForm" class="admin-form">
+            <div class="form-group">
+                <label>Название тура:</label>
+                <input type="text" id="tourName" required>
+            </div>
+
+            <div class="form-group">
+                <label>Стоимость тура (₽):</label>
+                <input type="number" id="tourPrice" required>
+            </div>
+
+            <div class="form-group">
+                <label>Продолжительность (дней):</label>
+                <input type="number" id="tourDuration" required>
+            </div>
+
+            <div class="form-group features-group">
+                <label>Особенности (выберите 3):</label>
+                <select class="feature-select">
+                    <option value="">Выберите особенность</option>
+                    <option>Активный отдых</option>
+                    <option>Гастрономический</option>
+                    <option>Групповой</option>
+                    <option>Индивидуальный</option>
+                    <option>На английском языке</option>
+                    <option>На китайском языке</option>
+                    <option>Образовательный</option>
+                    <option>Семейный</option>
+                    <option>С экскурсоводом</option>
+                    <option>Тематический</option>
+                    <option>Экстремальный</option>
+                    <option>18+</option>
+                </select>
+                <select class="feature-select">
+                    <option value="">Выберите особенность</option>
+                    <option>Активный отдых</option>
+                    <option>Гастрономический</option>
+                    <option>Групповой</option>
+                    <option>Индивидуальный</option>
+                    <option>На английском языке</option>
+                    <option>На китайском языке</option>
+                    <option>Образовательный</option>
+                    <option>Семейный</option>
+                    <option>С экскурсоводом</option>
+                    <option>Тематический</option>
+                    <option>Экстремальный</option>
+                    <option>18+</option>
+                </select>
+                <select class="feature-select">
+                    <option value="">Выберите особенность</option>
+                    <option>Активный отдых</option>
+                    <option>Гастрономический</option>
+                    <option>Групповой</option>
+                    <option>Индивидуальный</option>
+                    <option>На английском языке</option>
+                    <option>На китайском языке</option>
+                    <option>Образовательный</option>
+                    <option>Семейный</option>
+                    <option>С экскурсоводом</option>
+                    <option>Тематический</option>
+                    <option>Экстремальный</option>
+                    <option>18+</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Сезонность:</label>
+                <select id="tourSeason" required>
+                    <option value="summer">Лето</option>
+                    <option value="autumn">Осень</option>
+                    <option value="winter">Зима</option>
+                    <option value="spring">Весна</option>
+                    <option value="year-round">Круглогодичный</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Сложность:</label>
+                <select id="tourDifficulty" required>
+                    <option value="easy">Легкий</option>
+                    <option value="medium">Средний</option>
+                    <option value="hard">Сложный</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Тип тура:</label>
+                <select id="tourType" required>
+                    <option>Автомобильный</option>
+                    <option>Велосипедный</option>
+                    <option>Воздушный</option>
+                    <option>На лошадях</option>
+                    <option>На поезде</option>
+                    <option>Пеший</option>
+                    <option>Речной</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Откуда:</label>
+                <input type="text" id="tourFrom" required>
+            </div>
+
+            <div class="form-group">
+                <label>Куда:</label>
+                <input type="text" id="tourTo" required>
+            </div>
+
+            <div class="form-group">
+                <label>Свободные места:</label>
+                <input type="number" id="tourSeats" required>
+            </div>
+
+            <div class="form-group date-group">
+                <div>
+                    <label>Дата начала:</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div>
+                    <label>Дата окончания:</label>
+                    <input type="date" id="endDate" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Описание:</label>
+                <textarea id="tourDescription" rows="5" required></textarea>
+            </div>
+
+            <button type="submit" class="add-tour-btn">Добавить тур</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

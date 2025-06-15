@@ -1092,3 +1092,67 @@ strong {
     text-align: right;
 }
 
+/* Стили для админ-панели */
+.admin-container {
+    max-width: 650px;
+    margin: 25px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.admin-container h2{
+    text-align: center;
+    margin-top: 15px;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #2e4b35;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.features-group {
+    gap: 15px;
+}
+
+
+.date-group {
+    gap: 20px;
+}
+
+.add-tour-btn {
+    background: #2e4b35;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.add-tour-btn:hover {
+    background: #3a5b45;
+    transform: translateY(-2px);
+}
