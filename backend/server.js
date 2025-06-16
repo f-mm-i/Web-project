@@ -275,3 +275,153 @@ const checkAuth = (req, res, next) => {
         next();
     });
 };
+
+// Бронирование тура
+app.post('/api/tours/book', checkAuth, async (req, res) => {
+    const client = await pool.connect(); // Получаем клиента из пула
+    try {
+        await client.query('BEGIN'); // Начало транзакции
+
+        const { tourId } = req.body;
+        const userId = req.userId;
+
+        // 1. Проверка существования пользователя
+        const userCheck = await client.query(
+            'SELECT client_id FROM client WHERE client_id = $1',
+            [userId]
+        );
+        if (userCheck.rows.length === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: 'Пользователь не найден' });
+        }
+
+        // 2. Проверка существования тура и блокировка строки
+        const tourResult = await client.query(
+            `SELECT tour_number_seats, tour_cost 
+            FROM tour 
+            WHERE tour_id = $1 
+            FOR UPDATE NOWAIT`, // Жесткая блокировка для избежания deadlock
+            [tourId]
+        );
+        
+        if (tourResult.rows.length === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: 'Тур не найден' });
+        }
+
+        // 3. Проверка доступности мест
+        const availableSeats = tourResult.rows[0].tour_number_seats;
+        if (availableSeats < 1) {
+            await client.query('ROLLBACK');
+            return res.status(400).json({ error: 'Нет свободных мест' });
+        }
+
+        // 4. Создание записи в заказах
+        await client.query(
+            `INSERT INTO "order" (
+                order_cost, 
+                order_date, 
+                client_id, 
+                tour_id
+            ) VALUES ($1, CURRENT_DATE, $2, $3)`,
+            [
+                tourResult.rows[0].tour_cost,
+                userId,
+                tourId
+            ]
+        );
+
+        // 5. Обновление количества мест
+        await client.query(
+            `UPDATE tour 
+            SET tour_number_seats = $1 
+            WHERE tour_id = $2`,
+            [availableSeats - 1, tourId]
+        );
+
+        await client.query('COMMIT');
+
+        // Получаем данные пользователя
+        const userData = await pool.query(
+            'SELECT client_email FROM client WHERE client_id = $1',
+            [userId]
+        );
+
+        // Получаем данные тура
+        const tourData = await pool.query(
+            'SELECT tour_name, tour_start_date, tour_end_date FROM tour WHERE tour_id = $1',
+            [tourId]
+        );
+
+        // Формируем письмо
+        const mailOptions = {
+            from: '"Real Tours" <realtours159@yandex.ru>',
+            to: userData.rows[0].client_email,
+            subject: 'Подтверждение бронирования тура',
+            text: `Здравствуйте!
+            
+            Вы успешно забронировали тур: "${tourData.rows[0].tour_name}".
+            Даты: ${new Date(tourData.rows[0].tour_start_date).toLocaleDateString('ru-RU')} - ${new Date(tourData.rows[0].tour_end_date).toLocaleDateString('ru-RU')}.
+            
+            Наш менеджер свяжется с вами в течение 24 часов для уточнения деталей.
+            
+            С уважением,
+            Команда Real Tours`
+        };
+
+        // Отправляем письмо
+        await transporter.sendMail(mailOptions);
+
+        res.json({ 
+            success: true,
+            message: 'Бронирование успешно выполнено. Информация о бронировании направлена на Вашу почту!'
+        });
+    } catch (error) {
+        await client.query('ROLLBACK'); // Откат при ошибке
+        
+        // Специфичные ошибки PostgreSQL
+        if (error.code === '55P03') { // Код ошибки lock-not-available
+            return res.status(409).json({ error: 'Тур уже обновляется, попробуйте позже' });
+        }
+
+        console.error('Детали ошибки:', {
+            message: error.message,
+            stack: error.stack,
+            query: error.query
+        });
+
+        res.status(500).json({
+            error: 'Ошибка сервера',
+            details: `Код ошибки: ${error.code || 'N/A'} | Сообщение: ${error.message}`
+        });
+    } finally {
+        client.release(); // Важно: возвращаем клиента в пул
+    }
+});
+
+app.get('/api/user/bookings', checkAuth, async (req, res) => {
+    try {
+        const userId = req.userId;
+        const result = await pool.query(`
+            SELECT 
+                o.order_id as id,
+                t.tour_name,
+                t.tour_start_date as start_date,
+                t.tour_end_date as end_date,
+                o.order_cost::INTEGER as price,  -- Явное преобразование
+                o.status
+            FROM "order" o
+            JOIN tour t ON o.tour_id = t.tour_id
+            WHERE o.client_id = $1
+            ORDER BY o.order_date DESC
+        `, [userId]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Ошибка получения бронирований:', error);
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
