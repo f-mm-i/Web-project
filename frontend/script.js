@@ -612,37 +612,13 @@ window.logout = function() {
     window.location.href = 'tours.html';
 };
 
-
-const winston = require('winston');
-
-// Настройка логгера
-const logger = winston.createLogger({
-  level: 'debug',
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: 'server.log' })
-  ],
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  )
-});
-
-// Логирование запросов
-app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.url}`, {
-    ip: req.ip,
-    body: req.body
-  });
-  next();
-});
-
-// Логирование ошибок
-app.use((err, req, res, next) => {
-  logger.error('Server Error:', {
-    message: err.message,
-    stack: err.stack,
-    route: req.path
-  });
-  res.status(500).json({ error: 'Internal Server Error' });
-});
+// Экспорт для тестов (Node.js)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        applySearch,
+        applyFilters,
+        sortTours,
+        updateTours,
+        showTourDetails
+    };
+}
