@@ -378,8 +378,6 @@ app.post('/api/tours/book', checkAuth, async (req, res) => {
         });
     } catch (error) {
         await client.query('ROLLBACK'); // Откат при ошибке
-        
-        // Специфичные ошибки PostgreSQL
         if (error.code === '55P03') { // Код ошибки lock-not-available
             return res.status(409).json({ error: 'Тур уже обновляется, попробуйте позже' });
         }
